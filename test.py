@@ -12,7 +12,7 @@ BLEU_CLAIR = (47,225,252)
 ORANGE = (252, 136, 35)
 VERT = 21, 216, 47
 
-couleur = [ORANGE, BLEU_CLAIR, VERT]
+couleur = [ORANGE, BLEU_CLAIR, VERT]    #Pour plus de clarté chaque niveau sera représenté par une couleur
 
 
 """
@@ -21,7 +21,7 @@ lycee = pygame.transform.scale(lycee, (700,400))
 ecran.blit(lycee, (0,0))
 """
 
-#colo slate
+#colo slate    ( truc perso )
 
 """
 cour = pygame.image.load("cour_d'honneur.jpg").convert_alpha()
@@ -31,10 +31,13 @@ cour.set_alpha(180)
 ecran.blit(cour, (150, 100))
 """
 
+#Dimensions générales d'un losange
 losange = [(27,0),(54,16),(27,32),(0,16)]
 
+#Dimensions du la grille : N pour x,y; H pour z
 N=12
 H=3
+#hauteur en pixels d'un niveau
 h = 50
 grille = [ [ [0]*N for _ in range(N)] for z in range(H) ]
 
@@ -52,7 +55,7 @@ def rendu():
 					pos[0] += 27*(x - y)
 					pos[1] += 16*(x + y)
 					ecran.blit(los, pos)
-					pygame.display.flip()
+	pygame.display.flip()
 
 def dessinerRectangle(x1,y1,x2,y2,z):
 	if x1>=N or x2>=N or y1>=N or y2>=N:
