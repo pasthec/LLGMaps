@@ -195,6 +195,68 @@ dessinerRectangle(0,0,30,30,0)
 dessinerRectangle(0,0,30,3,1)
 dessinerRectangle(0,0,3,30,1)
 
+## RdC VH
+
+dessinerRectangle(0,0,21,15,0)   
+dessinerRectangle(6,16,21,27,0) """Sol de la cours + salles de cours"""
+dessinerRectangle(3,16,5,17) """Escalier vers N3"""
+dessinerRectangle(18,28,19,31,0) """Escalier HX1/4"""
+dessinerLigneMurGauche(18,28,18,31,0) """ mur Escalier HX1/4"""
+dessinerLigneMurGauche(20,28,20,31,0) """idem"""
+dessinerLigneMurDroit(0,0,21,0,0) '''Mur exterieur derriere VH0xx'''
+dessinerLigneMurDroit(0,2,21,2,0) '''Mur des VH Oxx'''
+for k in range(6): '''mur inter-salle'''
+    dessinerLigneMurGauche(3+3*k,0,3+3*k,1,0)
+dessinerLigneMurGauche(0,0,0,31,0) '''Mur exterieur derriere amphi/wc'''
+dessinerLigneMurGauche(3,3,3,17,0) '''mur devant wc/gymnase'''
+dessinerMurGauche(4,7,0) '''Pilier RdC début'''
+dessinerMurGauche(4,11,0)
+dessinerMurDroit(6,3,0)
+dessinerMurDroit(10,3,0)
+dessinerMurDroit(14,3,0) '''fin pilier'''
+dessinerLigneMurGauche(19,0,19,1,0) '''mur escalier/parloir'''
+dessinerLigneMurGauche(19,3,19,14,0) '''mur chapelle -> CPE'''
+dessinerLigneMurGauche(19,16,19,18,0) '''mur escalier anglais'''
+dessinerLigneMurGauche(19,20,19,27,0) '''mur cafet -> musique'''    
+dessinerMurDroit(19,3,0) '''Mur chapelle'''
+dessinerMurDroit(21,3,0)
+dessinerLigneMurDroit(19,10,21,10,0) '''Tous les murs du coté chapelle'''
+dessinerLigneMurDroit(19,13,21,13,0)
+dessinerLigneMurDroit(19,15,21,15,0)
+dessinerLigneMurDroit(20,16,21,16,0)
+dessinerLigneMurDroit(20,19,21,19,0)
+dessinerLigneMurDroit(20,20,21,20,0)
+dessinerLigneMurDroit(19,24,21,24,0)
+dessinerLigneMurDroit(19,26,21,26,0)
+dessinerLigneMurDroit(19,28,21,28,0) '''fin mur coté chapelle'''
+dessinerLigneMurDroit(17,28,6,28,0) '''Mur ECS'''
+dessinerLigneMurGauche(6,16,6,27,0) '''mur amphi'''
+dessinerLigneMurDroit(4,16,5,16,0) '''Mur escalier vers N3 début''' 
+dessinerLigneMurDroit(3,18,5,18,0)
+dessinerMurDroit(3,17,0) '''fin mur ...'''
+
+changerMurGauche(3,14,0, -1) '''debut portes'''
+changerMurGauche(3,11,0, -1)
+changerMurGauche(3,9,0, -1)
+for k in range(3):
+    changerMurGauche(6+3*k,0,0, -1)
+changerMurGauche(19,12,0, -1)
+changerMurGauche(19,13,0, -1)
+changerMurGauche(19,25,0, -1)
+changerMurGauche(19,26,0, -1)
+
+changerMurDroit(1,2,0, -1)
+changerMurDroit(3,2,0, -1)
+changerMurDroit(6,2,0, -1)
+changerMurDroit(11,2,0, -1)
+changerMurDroit(14,2,0, -1)
+changerMurDroit(18,2,0, -1)
+changerMurDroit(20,2,0, -1) '''fin portes'''
+
+
+## Fin RdC VH
+
+
 rendu()
 
 #print(*BFS(0,0,0,1,3,0))
