@@ -3,7 +3,7 @@ from queue import *
 
 pygame.init()
 
-ecran = pygame.display.set_mode((700, 550),pygame.RESIZABLE)
+ecran = pygame.display.set_mode((720, 600),pygame.RESIZABLE)
 ecran.fill((255,255,255))
 
 #Couleurs
@@ -32,10 +32,10 @@ cour.set_alpha(180)
 ecran.blit(cour, (150, 100))
 """
 #Dimensions du la grille : N pour x,y; H pour z
-N=12
+N=50
 H=4
 #hauteur en pixels d'un niveau
-h = 50
+h = 50		
 grille = [ [ [0]*N for _ in range(N)] for z in range(H) ]
 
 """ Système de représentation sur 5 bits:
@@ -47,9 +47,11 @@ grille = [ [ [0]*N for _ in range(N)] for z in range(H) ]
     5e		-> présence d'une tuile
 """
 
-losange = [(27,0),(54,16),(27,32),(0,16)]
-MUR_G = [(0,13+h), (27,h-3), (27,0), (0, 16)]
-MUR_D = [(0,h-3), (27,13+h), (27,16), (0,0)]
+htuile, ltuile = 6, 10
+
+losange = [(ltuile//2,0),(ltuile,htuile//2),(ltuile//2,htuile),(0,htuile//2)]
+MUR_G = [(ltuile//2,0), (ltuile//2,h), (0,h+htuile//2), (0, htuile//2)]
+MUR_D = [(0,0), (ltuile//2,htuile//2), (ltuile//2,h+htuile//2), (0,h)]
 
 def voisins(position):
 	z,x,y = position
@@ -64,7 +66,7 @@ def voisins(position):
 		if (grille[z][x][y]//(2**2))%2 == 1 and  (grille[z-1][x][y]//(2**4))%2 == 1: #Si il y a un escalier vers le bas qui mène sur une case
 			vois.append((z-1,x,y))
 	if z<H-1:
-		if (grille[z][x][y]//(2**3))%2 == 1 and  (grille[z+1][x][y]//(2**4))%2 == 1: #Si il y a un escalier vers le hzut qui mène sur une case
+		if (grille[z][x][y]//(2**3))%2 == 1 and  (grille[z+1][x][y]//(2**4))%2 == 1: #Si il y a un escalier vers le haut qui mène sur une case
 			vois.append((z+1,x,y))
 	return vois
 
@@ -106,12 +108,12 @@ def rendu():
 		for x in range(N):
 			for y in range(N):
 				if (grille[z][x][y]//2**4)%2==1:
-					los = pygame.Surface((55,40),pygame.SRCALPHA)
-					pygame.draw.polygon(los, NOIR+(255,), losange, 6)
+					los = pygame.Surface((ltuile+2,htuile+2),pygame.SRCALPHA)
+					pygame.draw.polygon(los, NOIR+(255,), losange, 3)
 					pygame.draw.polygon(los, couleur[z] +(200,), losange)
 					pos = [324, 150-z*h]
-					pos[0] += 27*(x - y)
-					pos[1] += 16*(x + y)
+					pos[0] += htuile*(x - y)
+					pos[1] += ltuile//2*(x + y)
 					ecran.blit(los, pos)
 				if (grille[z][x][y]//2) % 2 == 1:
 					dessinerMurGauche(x,y,z)
@@ -128,20 +130,20 @@ def dessinerRectangle(x1,y1,x2,y2,z):
 
 def dessinerMurGauche(x,y,z):
 	mur = pygame.Surface((28, 32+h), pygame.SRCALPHA)
-	pygame.draw.polygon(mur, NOIR+(255,), MUR_G, 6)
+	#pygame.draw.polygon(mur, NOIR+(255,), MUR_G, 6)
 	pygame.draw.polygon(mur, couleur[z] +(200,), MUR_G)
 	pos = [324, 150-z*h - h]
-	pos[0] += 27*(x - y)
-	pos[1] += 16*(x + y)
+	pos[0] += htuile*(x - y)
+	pos[1] += ltuile*(x + y)
 	ecran.blit(mur, pos)
 
 def dessinerMurDroit(x,y,z):
 	mur = pygame.Surface((28, 32+h), pygame.SRCALPHA)
-	pygame.draw.polygon(mur, NOIR+(255,), MUR_D, 6)
+	#pygame.draw.polygon(mur, NOIR+(255,), MUR_D, 6)
 	pygame.draw.polygon(mur, couleur[z] +(200,), MUR_D)
 	pos = [324, 150-z*h - h]
-	pos[0] += 27*(x - y) + 27
-	pos[1] += 16*(x + y)
+	pos[0] += htuile*(x - y) + ltuile//2
+	pos[1] += ltuile*(x + y)
 	ecran.blit(mur, pos)
 
 def changerMurGauche(x,y,z, a):
@@ -189,10 +191,13 @@ dessinerRectangle(3,5,8,6,0)
 dessinerRectangle(2,2,6,2,1)
 changerMurGauche(0,0,0,1)
 changerMurDroit(0,0,0,1)
+dessinerRectangle(0,0,30,30,0)
+dessinerRectangle(0,0,30,3,1)
+dessinerRectangle(0,0,3,30,1)
 
 rendu()
 
-print(*BFS(0,0,0,1,3,0))
+#print(*BFS(0,0,0,1,3,0))
 
 
 continuer = True
