@@ -18,19 +18,6 @@ ROSE = (223, 102, 232)
 couleur = [ORANGE, BLEU_CLAIR, VERT, ROSE] #Pour plus de clarté chaque niveau sera représenté par une couleur
 
 
-"""
-lycee = pygame.image.load("lycee_ext.jpg").convert_alpha()
-lycee = pygame.transform.scale(lycee, (700,400))
-ecran.blit(lycee, (0,0))
-"""
-
-"""
-cour = pygame.image.load("cour_d'honneur.jpg").convert_alpha()
-cour = pygame.transform.scale(cour, (256, 182))
-cour = pygame.transform.rotate(cour, 45)
-cour.set_alpha(180)
-ecran.blit(cour, (150, 100))
-"""
 #Dimensions du la grille : N pour x,y; H pour z
 N=50
 H=4
@@ -47,16 +34,18 @@ grille = [ [ [0]*N for _ in range(N)] for z in range(H) ]
     5e		-> présence d'une tuile
 """
 
-htuile, ltuile = 6, 10
+htuile, ltuile = 10, 16
 
 losange = [(ltuile//2,0),(ltuile,htuile//2),(ltuile//2,htuile),(0,htuile//2)]
 MUR_G = [(ltuile//2,0), (ltuile//2,h), (0,h+htuile//2), (0, htuile//2)]
+MUR_G_C = [(ltuile//2,0), (0, htuile//2)]
 MUR_D = [(0,0), (ltuile//2,htuile//2), (ltuile//2,h+htuile//2), (0,h)]
+MUR_D_C = [(0,0), (ltuile//2,htuile//2)]
 
 def voisins(position):
 	z,x,y = position
 	vois=[]
-	for direction in [(1,0),(-1,0),(0,1),(0,-1)]:
+	for direction in [(1,0),(-1,0),(0,1),(0,-1),(1,1),(1,-1),(-1,1),(-1,-1)]:
 		dx, dy= direction[0], direction[1]
 		nx, ny = x+dx, y+dy
 		if nx>=0 and nx<N and ny>=0 and ny<N:
@@ -88,17 +77,18 @@ def BFS(x1,y1,z1, x2,y2,z2):
 		print("Voisins :")
 		for vois in voisins(curPos):
 			print(vois)
-			if prec[vois[2]][vois[0]][vois[1]] == (-1,-1,-1):
-				prec[vois[2]][vois[0]][vois[1]] = curPos
+			if prec[vois[0]][vois[1]][vois[2]] == (-1,-1,-1):
+				prec[vois[0]][vois[1]][vois[2]] = curPos
 				file.put(vois)
 	if not trouve:
 		print("Chemin impossible :'(")
 	else:
+		print("On a trouvé le chemin vers les citées d'or !")
 		chemin = []
 		pos = arrivee
 		chemin.append(arrivee)
 		while pos!=posDepart:
-			pos = prec[pos[2]][pos[0]][pos[1]]
+			pos = prec[pos[0]][pos[1]][pos[2]]
 			chemin.append(pos)
 		return chemin[::-1]
 	return []
@@ -109,11 +99,11 @@ def rendu():
 			for y in range(N):
 				if (grille[z][x][y]//2**4)%2==1:
 					los = pygame.Surface((ltuile+2,htuile+2),pygame.SRCALPHA)
-					pygame.draw.polygon(los, NOIR+(255,), losange, 3)
+					pygame.draw.polygon(los, NOIR+(255,), losange, 4)
 					pygame.draw.polygon(los, couleur[z] +(200,), losange)
 					pos = [324, 150-z*h]
-					pos[0] += htuile*(x - y)
-					pos[1] += ltuile//2*(x + y)
+					pos[0] += (htuile-1)*(x - y)
+					pos[1] += (ltuile//2-1)*(x + y)
 					ecran.blit(los, pos)
 				if (grille[z][x][y]//2) % 2 == 1:
 					dessinerMurGauche(x,y,z)
@@ -129,21 +119,21 @@ def dessinerRectangle(x1,y1,x2,y2,z):
 			changerTuile(x,y,z,1)
 
 def dessinerMurGauche(x,y,z):
-	mur = pygame.Surface((28, 32+h), pygame.SRCALPHA)
-	#pygame.draw.polygon(mur, NOIR+(255,), MUR_G, 6)
+	mur = pygame.Surface((ltuile, htuile+h), pygame.SRCALPHA)
+	pygame.draw.polygon(mur, BLANC+(255,), MUR_G, 4)
 	pygame.draw.polygon(mur, couleur[z] +(200,), MUR_G)
 	pos = [324, 150-z*h - h]
-	pos[0] += htuile*(x - y)
-	pos[1] += ltuile*(x + y)
+	pos[0] += (htuile-1)*(x - y)
+	pos[1] += (ltuile//2-1)*(x + y)
 	ecran.blit(mur, pos)
 
 def dessinerMurDroit(x,y,z):
-	mur = pygame.Surface((28, 32+h), pygame.SRCALPHA)
-	#pygame.draw.polygon(mur, NOIR+(255,), MUR_D, 6)
+	mur = pygame.Surface((ltuile, htuile+h), pygame.SRCALPHA)
+	pygame.draw.polygon(mur, BLANC+(255,), MUR_D, 4)
 	pygame.draw.polygon(mur, couleur[z] +(200,), MUR_D)
 	pos = [324, 150-z*h - h]
-	pos[0] += htuile*(x - y) + ltuile//2
-	pos[1] += ltuile*(x + y)
+	pos[0] += (htuile-1)*(x - y) + ltuile//2
+	pos[1] += (ltuile//2-1)*(x + y)
 	ecran.blit(mur, pos)
 
 def changerMurGauche(x,y,z, a):
@@ -177,6 +167,39 @@ def changerEscalierB(x,y,z, a):
 	if a==-1 and (grille[z][x][y]//(2**2))%2 == 1:
 		grille[z][x][y] -= 2**2
 
+def dessinerLigneMurGauche(x1,y1,x2,y2,z):
+	if x1>=N or x2>=N or y1>=N or y2>=N:
+		return
+	if y2 < y1:
+		y1, y2 = y2, y1
+	if x2 < x1:
+		x1, x2 = x2, x1
+	for i in range(y2-y1+1):
+		for j in range(x2-x1+1):
+			changerMurGauche(x1+j,y1+i,z,1)
+
+def dessinerLigneMurDroit(x1,y1,x2,y2,z):
+	if x1>=N or x2>=N or y1>=N or y2>=N:
+		return
+	if x2 < x1:
+		x1, x2 = x2, x1
+	for i in range(y2-y1+1):
+		for j in range(x2-x1+1):
+			changerMurDroit(x1+j,y1+i,z,1)
+
+def dessinerChemin(chemin):
+	for pos in chemin:
+		z,x,y = pos
+		los = pygame.Surface((ltuile+2,htuile+2),pygame.SRCALPHA)
+		pygame.draw.polygon(los, NOIR+(255,), losange, 4)
+		pygame.draw.polygon(los, VERT +(200,), losange)
+		pos = [324, 150-z*h]
+		pos[0] += (htuile-1)*(x - y)
+		pos[1] += (ltuile//2-1)*(x + y)
+		ecran.blit(los, pos)
+
+
+
 grille[0][0][0] = 2**4
 grille[1][0][0] = 2**4
 grille[2][0][0] = 2**4
@@ -191,36 +214,58 @@ dessinerRectangle(3,5,8,6,0)
 dessinerRectangle(2,2,6,2,1)
 changerMurGauche(0,0,0,1)
 changerMurDroit(0,0,0,1)
-dessinerRectangle(0,0,30,30,0)
-dessinerRectangle(0,0,30,3,1)
-dessinerRectangle(0,0,3,30,1)
+dessinerRectangle(0,0,21,31,0)
+dessinerRectangle(0,0,21,2,1)
+dessinerRectangle(0,0,3,15,1)
+dessinerRectangle(0,16,5,28	,1)
+dessinerRectangle(19,0,21,31,1)
 
 ## RdC VH
 
 dessinerRectangle(0,0,21,15,0)   
-dessinerRectangle(6,16,21,27,0) """Sol de la cours + salles de cours"""
-dessinerRectangle(3,16,5,17) """Escalier vers N3"""
-dessinerRectangle(18,28,19,31,0) """Escalier HX1/4"""
-dessinerLigneMurGauche(18,28,18,31,0) """ mur Escalier HX1/4"""
-dessinerLigneMurGauche(20,28,20,31,0) """idem"""
-dessinerLigneMurDroit(0,0,21,0,0) '''Mur exterieur derriere VH0xx'''
-dessinerLigneMurDroit(0,2,21,2,0) '''Mur des VH Oxx'''
-for k in range(6): '''mur inter-salle'''
-    dessinerLigneMurGauche(3+3*k,0,3+3*k,1,0)
-dessinerLigneMurGauche(0,0,0,31,0) '''Mur exterieur derriere amphi/wc'''
-dessinerLigneMurGauche(3,3,3,17,0) '''mur devant wc/gymnase'''
-dessinerMurGauche(4,7,0) '''Pilier RdC début'''
-dessinerMurGauche(4,11,0)
-dessinerMurDroit(6,3,0)
-dessinerMurDroit(10,3,0)
-dessinerMurDroit(14,3,0) '''fin pilier'''
-dessinerLigneMurGauche(19,0,19,1,0) '''mur escalier/parloir'''
-dessinerLigneMurGauche(19,3,19,14,0) '''mur chapelle -> CPE'''
-dessinerLigneMurGauche(19,16,19,18,0) '''mur escalier anglais'''
-dessinerLigneMurGauche(19,20,19,27,0) '''mur cafet -> musique'''    
-dessinerMurDroit(19,3,0) '''Mur chapelle'''
+dessinerRectangle(6,16,21,27,0)
+"""Sol de la cours + salles de cours"""
+dessinerRectangle(3,16,5,17,0) 
+"""Escalier vers N3"""
+dessinerRectangle(18,28,19,31,0) 
+"""Escalier HX1/4"""
+dessinerLigneMurGauche(18,28,18,31,0) 
+""" mur Escalier HX1/4"""
+dessinerLigneMurGauche(20,28,20,31,0) 
+"""idem"""
+dessinerLigneMurDroit(0,0,21,0,0) 
+'''Mur exterieur derriere VH0xx'''
+dessinerLigneMurDroit(0,2,21,2,0) 
+'''Mur des VH Oxx'''
+
+'''mur inter-salle'''
+for k in range(6):
+	dessinerLigneMurGauche(3+3*k,0,3+3*k,1,0)
+
+dessinerLigneMurGauche(0,0,0,31,0) 
+'''Mur exterieur derriere amphi/wc'''
+dessinerLigneMurGauche(3,3,3,17,0) 
+'''mur devant wc/gymnase'''
+changerMurGauche(4,7,0,1) 
+'''Pilier RdC début'''
+changerMurGauche(4,11,0,1)
+changerMurDroit(6,3,0,1)
+changerMurDroit(10,3,0,1)
+changerMurDroit(14,3,0,1) 
+'''fin pilier'''
+dessinerLigneMurGauche(19,0,19,1,0) 
+'''mur escalier/parloir'''
+dessinerLigneMurGauche(19,3,19,14,0) 
+'''mur chapelle -> CPE'''
+dessinerLigneMurGauche(19,16,19,18,0) 
+'''mur escalier anglais'''
+dessinerLigneMurGauche(19,20,19,27,0) 
+'''mur cafet -> musique'''    
+dessinerMurDroit(19,3,0) 
+'''Mur chapelle'''
 dessinerMurDroit(21,3,0)
-dessinerLigneMurDroit(19,10,21,10,0) '''Tous les murs du coté chapelle'''
+dessinerLigneMurDroit(19,10,21,10,0) 
+'''Tous les murs du coté chapelle'''
 dessinerLigneMurDroit(19,13,21,13,0)
 dessinerLigneMurDroit(19,15,21,15,0)
 dessinerLigneMurDroit(20,16,21,16,0)
@@ -228,14 +273,20 @@ dessinerLigneMurDroit(20,19,21,19,0)
 dessinerLigneMurDroit(20,20,21,20,0)
 dessinerLigneMurDroit(19,24,21,24,0)
 dessinerLigneMurDroit(19,26,21,26,0)
-dessinerLigneMurDroit(19,28,21,28,0) '''fin mur coté chapelle'''
-dessinerLigneMurDroit(17,28,6,28,0) '''Mur ECS'''
-dessinerLigneMurGauche(6,16,6,27,0) '''mur amphi'''
-dessinerLigneMurDroit(4,16,5,16,0) '''Mur escalier vers N3 début''' 
+dessinerLigneMurDroit(19,28,21,28,0) 
+'''fin mur coté chapelle'''
+dessinerLigneMurDroit(17,28,6,28,0) 
+'''Mur ECS'''
+dessinerLigneMurGauche(6,16,6,27,0)
+'''mur amphi'''
+dessinerLigneMurDroit(4,16,5,16,0) 
+'''Mur escalier vers N3 début''' 
 dessinerLigneMurDroit(3,18,5,18,0)
-dessinerMurDroit(3,17,0) '''fin mur ...'''
+dessinerMurDroit(3,17,0) 
+'''fin mur ...'''
 
-changerMurGauche(3,14,0, -1) '''debut portes'''
+changerMurGauche(3,14,0, -1) 
+'''debut portes'''
 changerMurGauche(3,11,0, -1)
 changerMurGauche(3,9,0, -1)
 for k in range(3):
@@ -251,7 +302,8 @@ changerMurDroit(6,2,0, -1)
 changerMurDroit(11,2,0, -1)
 changerMurDroit(14,2,0, -1)
 changerMurDroit(18,2,0, -1)
-changerMurDroit(20,2,0, -1) '''fin portes'''
+changerMurDroit(20,2,0, -1) 
+'''fin portes'''
 
 
 ## Fin RdC VH
@@ -259,7 +311,8 @@ changerMurDroit(20,2,0, -1) '''fin portes'''
 
 rendu()
 
-#print(*BFS(0,0,0,1,3,0))
+
+dessinerChemin(BFS(0,0,0,8,18,0))
 
 
 continuer = True
