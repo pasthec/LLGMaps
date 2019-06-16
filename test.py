@@ -309,6 +309,88 @@ changerMurDroit(20,2,0, -1)
 ## Fin RdC VH
 
 
+## Debut Etage1 VH
+
+dessinerRectangle(0,0,3,15,1)
+"""sol VH14X"""
+dessinerRectangle(4,0,18,2,1)
+"""sol VH orthog. 141"""
+dessinerRectangle(3,16,5,17,1)
+"""escalier vers N3"""
+dessinerRectangle(1,18,5,28,1)
+dessinerRectangle(1,29,3,29,1)
+dessinerRectangle(5,28,17,30,1)
+dessinerRectangle(18,28,21,31,1)
+dessinerRectangle(19,10,21,27,1)
+"""Sol 1er etage"""
+dessinerLigneMurGauche(0,0,0,15,1)
+dessinerLigneMurGauche(3,4,3,17,1)
+dessinerLigneMurDroit(0,0,18,0,1)
+dessinerLigneMurDroit(0,2,17,2,1)
+dessinerLigneMurDroit(4,3,18,3,1)
+for k in range(6):
+	dessinerLigneMurGauche(3+3*k,0,3+3*k,1,1)
+dessinerLigneMurGauche(19,0,19,27,1)	
+dessinerLigneMurDroit(0,3,2,3,1)
+dessinerLigneMurDroit(1,6,2,6,1)
+dessinerLigneMurDroit(1,10,2,10,1)
+dessinerLigneMurDroit(1,13,2,13,1)
+dessinerLigneMurDroit(0,16,2,16,1)
+"""Murs haut droit"""
+dessinerLigneMurDroit(4,16,5,16,1)
+dessinerLigneMurGauche(6,16,6,27,1)
+"""murs escalier N3/SdC"""
+dessinerLigneMurDroit(1,18,3,18,1)
+dessinerLigneMurDroit(1,22,3,22,1)
+dessinerLigneMurDroit(1,26,3,26,1)
+dessinerLigneMurGauche(1,18,1,29,1)
+dessinerLigneMurDroit(1,30,3,30,1)
+dessinerLigneMurGauche(4,19,4,20,1)
+dessinerLigneMurGauche(4,23,4,24,1)
+dessinerLigneMurGauche(4,27,4,28,1)
+dessinerLigneMurGauche(5,22,5,23,1)
+changerMurGauche(5,18,1,1)
+changerMurGauche(5,27,1,1)
+changerMurGauche(20,28,1,1)
+changerMurGauche(21,28,1,1)
+changerMurGauche(20,14,1,1)
+changerMurDroit(5,18,1,1)
+changerMurDroit(5,20,1,1)
+changerMurDroit(5,21,1,1)
+changerMurDroit(5,23,1,1)
+changerMurDroit(5,25,1,1)
+changerMurDroit(5,26,1,1)
+changerMurDroit(4,29,1,1)
+dessinerLigneMurDroit(5,28,18,28,1)
+dessinerLigneMurDroit(6,30,7,30,1)
+dessinerLigneMurDroit(6,30,7,30,1)
+dessinerLigneMurGauche(9,28,9,29,1)
+dessinerLigneMurGauche(10,28,10,29,1)
+dessinerLigneMurGauche(12,28,12,29,1)
+dessinerLigneMurGauche(14,28,14,29,1)
+dessinerLigneMurDroit(19,10,21,10,1)
+dessinerLigneMurDroit(20,13,21,13,1)
+dessinerLigneMurDroit(20,15,21,15,1)
+dessinerLigneMurDroit(20,16,21,16,1)
+dessinerLigneMurDroit(20,19,21,19,1)
+dessinerLigneMurDroit(20,20,21,20,1)
+dessinerLigneMurDroit(20,28,21,28,1)
+dessinerLigneMurGauche(20,30,20,31,1)
+dessinerLigneMurGauche(21,30,21,31,1)
+changerMurDroit(21,30,1,1)
+changerMurGauche(18,28,1,1)
+changerMurGauche(18,30,1,1)
+
+
+
+changerMurGauche(3,3,1,-1)
+changerMurGauche(3,6,1,-1)
+changerMurGauche(3,10,1,-1)
+changerMurGauche(3,13,1,-1)
+for k in range(6):
+	changerMurDroit(1+3*k,2,1,-1)
+
+##Fin Etage1 VH
 rendu()
 
 
