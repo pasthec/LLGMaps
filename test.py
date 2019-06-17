@@ -2,8 +2,10 @@ import pygame
 from queue import *
 
 pygame.init()
-
-ecran = pygame.display.set_mode((720, 600),pygame.RESIZABLE)
+ecran = pygame.display.set_mode((600, 600),pygame.RESIZABLE)
+logo = pygame.image.load('textures/logo_fenetre.jpg').convert_alpha()
+pygame.display.set_icon(logo)
+pygame.display.set_caption('LLGMaps')
 ecran.fill((255,255,255))
 
 #Couleurs
@@ -22,10 +24,16 @@ couleur = [ORANGE, BLEU_CLAIR, VERT, ROSE] #Pour plus de clarté chaque niveau s
 N=50
 H=4
 #hauteur en pixels d'un niveau
-h = 50		
+h = 35	
 grille = [ [ [0]*N for _ in range(N)] for z in range(H) ]
+col = [ [ [(BLANC)]*N for _ in range(N)] for z in range(H) ]
 
+for z in range(H):
+	for x in range(N):
+		for y in range(N):
+			col[z][x][y] = couleur[z]
 """ Système de représentation sur 5 bits:
+
     1er bit -> mur droit
     2e 		-> mur gauche
     3e		-> escalier vers le bas
@@ -44,12 +52,32 @@ MUR_D_C = [(0,0), (ltuile//2,htuile//2)]
 def voisins(position):
 	z,x,y = position
 	vois=[]
-	for direction in [(1,0),(-1,0),(0,1),(0,-1),(1,1),(1,-1),(-1,1),(-1,-1)]:
-		dx, dy= direction[0], direction[1]
-		nx, ny = x+dx, y+dy
-		if nx>=0 and nx<N and ny>=0 and ny<N:
-			if (grille[z][nx][ny]//2**4)%2==1:
-				vois.append((z,nx,ny))
+	if x<N-1 and (grille[z][x+1][y]//(2**4))%2 == 1 and (grille[z][x+1][y]//2)%2==0:	#Si il y a une case à droite et pas de mur entre les deux
+		vois.append((z,x+1,y))
+	if x>0 and  (grille[z][x-1][y]//(2**4))%2 == 1 and (grille[z][x][y]//2)%2==0:		#Si il y a une case à gauche et pas de mur entre les deux
+		vois.append((z,x-1,y))
+	if y<N-1 and (grille[z][x][y+1]//(2**4))%2 == 1 and (grille[z][x][y+1])%2==0:    #Si une case en bas et pas de mur entre les deux
+		vois.append((z,x,y+1))
+	if y>0 and (grille[z][x][y-1]//(2**4))%2 == 1 and (grille[z][x][y])%2==0:        #Si une case en haut et pas de mur entre les deux
+		vois.append((z,x,y-1))
+	#Pour aller en diagonale bas
+	# Si c'est une case et qu'aucun mur ne les sépare
+	if x<N-1 and y<N-1 and (grille[z][x+1][y+1]//(2**4))%2 == 1 and \
+	(grille[z][x+1][y]//2)%2==0 and (grille[z][x+1][y+1]%2==0) and (grille[z][x][y+1])%2==0 and (grille[z][x+1][y+1]//2)%2==0:
+		vois.append((z,x+1,y+1))
+	#Diagonale droite
+	if x<N-1 and y>0 and (grille[z][x+1][y+1]//(2**4))%2 == 1 and \
+	(grille[z][x+1][y]//2)%2==0 and (grille[z][x+1][y]%2==0) and (grille[z][x][y])%2==0 and (grille[z][x+1][y-1]//2)%2==0:
+		vois.append((z,x+1,y-1))
+	#Diagonale haut
+	if x>0 and y>0 and (grille[z][x-1][y-1]//(2**4))%2 == 1 and \
+	(grille[z][x][y]//2)%2==0 and grille[z][x][y]%2==0 and (grille[z][x][y-1]//2)%2==0 and grille[z][x-1][y]%2==0:
+		vois.append((z,x-1,y-1))
+	#Diagonale gauche
+	if x>0 and y<N-1 and (grille[z][x-1][y+1]//(2**4))%2 == 1 and \
+	(grille[z][x][y]//2)%2==0 and (grille[z][x][y+1]//2)%2==0 and grille[z][x][y+1]%2==0 and grille[z][x-1][y+1]%2==0:
+		vois.append((z,x-1,y+1))
+
 	if z>0:
 		if (grille[z][x][y]//(2**2))%2 == 1 and  (grille[z-1][x][y]//(2**4))%2 == 1: #Si il y a un escalier vers le bas qui mène sur une case
 			vois.append((z-1,x,y))
@@ -69,13 +97,13 @@ def BFS(x1,y1,z1, x2,y2,z2):
 	trouve = False
 	while not file.empty():
 		curPos = file.get()
-		print("curPos : {}".format(curPos))
+		#print("curPos : {}".format(curPos))
 		if curPos == arrivee:
 			trouve = True
 			break
-		print("Voisins :")
+		#print("Voisins :")
 		for vois in voisins(curPos):
-			print(vois)
+			#print(vois)
 			if prec[vois[0]][vois[1]][vois[2]] == (-1,-1,-1):
 				prec[vois[0]][vois[1]][vois[2]] = curPos
 				file.put(vois)
@@ -93,13 +121,15 @@ def BFS(x1,y1,z1, x2,y2,z2):
 	return []
 
 def rendu():
+	ecran.fill((255,255,255))
 	for z in range(H):
+		print(z)
 		for x in range(N):
 			for y in range(N):
 				if (grille[z][x][y]//2**4)%2==1:
 					los = pygame.Surface((ltuile+2,htuile+2),pygame.SRCALPHA)
 					pygame.draw.polygon(los, NOIR+(255,), losange, 4)
-					pygame.draw.polygon(los, couleur[z] +(200,), losange)
+					pygame.draw.polygon(los, col[z][x][y] +(200,), losange)
 					pos = [324, 150-z*h]
 					pos[0] += (htuile-1)*(x - y)
 					pos[1] += (ltuile//2-1)*(x + y)
@@ -187,6 +217,14 @@ def dessinerLigneMurDroit(x1,y1,x2,y2,z):
 			changerMurDroit(x1+j,y1+i,z,1)
 
 def dessinerChemin(chemin):
+	"""
+	for pos in chemin:
+		z,x,y = pos
+		col[z][x][y] = VERT
+	"""
+	print("rendu ... ")
+	rendu()
+	print("terminé")
 	for pos in chemin:
 		z,x,y = pos
 		los = pygame.Surface((ltuile+2,htuile+2),pygame.SRCALPHA)
@@ -196,9 +234,7 @@ def dessinerChemin(chemin):
 		pos[0] += (htuile-1)*(x - y)
 		pos[1] += (ltuile//2-1)*(x + y)
 		ecran.blit(los, pos)
-
-
-
+	pygame.display.flip()
 
 ## RdC VH
 
@@ -467,15 +503,15 @@ changerEscalierH(20,3,2,1)
 ##Fin Etage2 VH
 rendu()
 
-
-dessinerChemin(BFS(0,0,0,8,18,0))
-
-
-continuer = True
-
-while continuer:
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            continuer = False
-
-pygame.quit()
+while True:
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			pygame.quit()
+			exit()
+		if event.type == pygame.KEYDOWN:
+			if event.key == pygame.K_g:			
+				print("Où êtes vous ?")
+				x1, y1, z1 = map(int,input().split())
+				print("Où allez vous ?")
+				x2, y2, z2 = map(int,input().split())
+				dessinerChemin(BFS(x1,y1,z1,x2,y2,z2))
