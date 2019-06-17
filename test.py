@@ -258,7 +258,8 @@ dessinerLigneMurDroit(0,2,21,2,0)
 for k in range(6):
 	dessinerLigneMurGauche(3+3*k,0,3+3*k,1,0)
 
-dessinerLigneMurGauche(0,0,0,31,0) 
+dessinerLigneMurGauche(0,0,0,15,0) 
+dessinerLigneMurDroit(3,18,5,18,0) 
 '''Mur exterieur derriere amphi/wc'''
 dessinerLigneMurGauche(3,3,3,17,0) 
 '''mur devant wc/gymnase'''
