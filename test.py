@@ -17,7 +17,7 @@ VERT = (21, 216, 47)
 ROSE = (223, 102, 232)
 
 
-couleur = [ORANGE, BLEU_CLAIR, VERT, ROSE] #Pour plus de clarté chaque niveau sera représenté par une couleur
+couleur = [ORANGE, BLEU_CLAIR, ROSE, VERT] #Pour plus de clarté chaque niveau sera représenté par une couleur
 
 
 #Dimensions du la grille : N pour x,y; H pour z
@@ -349,10 +349,15 @@ dessinerRectangle(18,28,21,31,1)
 dessinerRectangle(19,10,21,27,1)
 """Sol 1er etage"""
 dessinerLigneMurGauche(0,0,0,15,1)
-dessinerLigneMurGauche(3,4,3,17,1)
 dessinerLigneMurDroit(0,0,18,0,1)
 dessinerLigneMurDroit(0,2,17,2,1)
 dessinerLigneMurDroit(4,3,18,3,1)
+
+changerMurGauche(4,7,1,1) 
+changerMurGauche(4,11,1,1)
+changerMurDroit(6,3,1,1)
+changerMurDroit(10,3,1,1)
+changerMurDroit(14,3,1,1)
 for k in range(6):
 	dessinerLigneMurGauche(3+3*k,0,3+3*k,1,1)
 dessinerLigneMurGauche(19,0,19,27,1)	
@@ -453,6 +458,7 @@ dessinerRectangle(20,2,21,3,2)
 dessinerLigneMurGauche(0,0,0,17,2)
 dessinerLigneMurGauche(3,3,3,17,2)
 dessinerLigneMurDroit(0,0,18,0,2)
+dessinerLigneMurGauche(3,4,3,17,2)
 for k in range(6):
 	dessinerLigneMurGauche(3+3*k,0,3+3*k,1,2)
 for k in range(5):
@@ -463,10 +469,7 @@ dessinerLigneMurDroit(4,20,4,21,2)
 
 """Pilier 2e début"""
 changerMurGauche(4,7,2,1) 
-changerMurGauche(4,11,2,1)
-changerMurDroit(6,3,2,1)
-changerMurDroit(10,3,2,1)
-changerMurDroit(14,3,2,1) 
+changerMurGauche(4,11,2,1) 
 """fin pilier"""
 """Murs haut droit"""
 
