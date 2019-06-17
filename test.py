@@ -26,7 +26,6 @@ h = 50
 grille = [ [ [0]*N for _ in range(N)] for z in range(H) ]
 
 """ Système de représentation sur 5 bits:
-
     1er bit -> mur droit
     2e 		-> mur gauche
     3e		-> escalier vers le bas
@@ -200,25 +199,6 @@ def dessinerChemin(chemin):
 
 
 
-grille[0][0][0] = 2**4
-grille[1][0][0] = 2**4
-grille[2][0][0] = 2**4
-grille[3][0][0] = 2**4
-grille[0][0][1] = 2**4
-grille[0][0][2], grille[0][0][3], grille[0][1][3] = 2**4,2**4,2**4
-grille[0][0][11] = 2**4
-grille[0][11][0] = 2**4
-grille[0][11][11] = 2**4
-
-dessinerRectangle(3,5,8,6,0)
-dessinerRectangle(2,2,6,2,1)
-changerMurGauche(0,0,0,1)
-changerMurDroit(0,0,0,1)
-dessinerRectangle(0,0,21,31,0)
-dessinerRectangle(0,0,21,2,1)
-dessinerRectangle(0,0,3,15,1)
-dessinerRectangle(0,16,5,28	,1)
-dessinerRectangle(19,0,21,31,1)
 
 ## RdC VH
 
