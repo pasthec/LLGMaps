@@ -21,8 +21,8 @@ couleur = [ORANGE, BLEU_CLAIR, VERT, ROSE] #Pour plus de clarté chaque niveau s
 
 
 #Dimensions du la grille : N pour x,y; H pour z
-N=50
-H=4
+N=35
+H=3
 #hauteur en pixels d'un niveau
 h = 35	
 grille = [ [ [0]*N for _ in range(N)] for z in range(H) ]
@@ -322,6 +322,14 @@ changerMurDroit(18,2,0, -1)
 changerMurDroit(20,2,0, -1) 
 '''fin portes'''
 
+"""Escalier"""
+changerEscalierH(20,17,0,1)
+changerEscalierH(4,16,0,1)
+changerEscalierH(4,17,0,1)
+changerEscalierH(0,0,0,1)
+changerEscalierH(18,1,0,1)
+changerEscalierH(9,28,0,1)
+changerEscalierH(19,31,0,1)
 
 ## Fin RdC VH
 
@@ -407,6 +415,22 @@ changerMurGauche(3,13,1,-1)
 for k in range(6):
 	changerMurDroit(1+3*k,2,1,-1)
 
+"""Escalier etage1"""
+
+changerEscalierB(4,16,1,1)
+changerEscalierH(4,16,1,1)
+changerEscalierB(4,17,1,1)
+changerEscalierH(4,17,1,1)
+changerEscalierB(0,0,1,1)
+changerEscalierH(0,0,1,1)
+changerEscalierB(18,1,1,1)
+changerEscalierH(18,1,1,1)
+changerEscalierB(9,28,1,1)
+changerEscalierH(9,28,1,1)
+changerEscalierB(19,31,1,1)
+changerEscalierH(19,31,1,1)
+changerEscalierB(20,17,1,1)
+changerEscalierH(20,17,1,1)
 ##Fin Etage1 VH
 
 ## Debut Etage2 VH
