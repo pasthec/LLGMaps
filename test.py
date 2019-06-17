@@ -407,7 +407,7 @@ dessinerRectangle(5,28,17,30,2)
 dessinerRectangle(18,28,19,31,2)
 dessinerRectangle(19,14,21,18,2)
 dessinerRectangle(19,2,19,2,2)
-dessinerRectangle(21,2,21,3,2)
+dessinerRectangle(20,2,21,3,2)
 """Sol 2e etage"""
 dessinerLigneMurGauche(0,0,0,17,2)
 dessinerLigneMurGauche(3,3,3,17,2)
